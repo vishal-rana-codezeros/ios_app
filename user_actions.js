@@ -87,8 +87,8 @@ forgot_password: function(req,res){
 					    secure: true,
 				        auth: {
 				        	// type:'PLAIN',
-				            user: 'harshad.codezeros@gmail.com', // generated ethereal user
-				            pass: 'codezeros123' // generated ethereal password
+				            user: 'vishal.rana@codezeros.com', // generated ethereal user
+				            pass: 'codezero#' // generated ethereal password
 				        }
 				        
 					})
