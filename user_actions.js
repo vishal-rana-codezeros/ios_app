@@ -10,20 +10,20 @@ module.exports = {
  	async.waterfall([
  		function(callback){
  			model.findOne({$or:[{email_id:req.body.email_id,status:'ACTIVE'},{username:req.body.username,status:'ACTIVE'}]},(err,data)=>{
- 				err ?  callback(err) : data ? callback(data) :	callback(null,data);
+ 				err ?  callback({code:500,message:"Internal server error"}) : data ? callback({code:400,message:"Email or username already exist."}) :	callback(null,data);
  			})
  		},(data,callback)=>{
  				console.log('has no data');
  			  var Model = new model(req.body);
 			  Model.save((err,data)=>{
-			   if(err) callback(err)
+			   if(err) callback({code:500,message:"Internal server error"})
 			    else
 			     callback(null,'done')
 			})
  		}
  		],(err,data)=>{
  			if(err){
- 				return res.json({code:400,message:"Please check your username and email"})
+ 				return res.json(err);
  			}else{
  				return res.json({code:201,message:"Registeration successful."})
  			}
