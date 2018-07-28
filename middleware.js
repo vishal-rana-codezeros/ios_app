@@ -30,10 +30,10 @@ function register(req,res,next){
 }
 
 function checkLogin(req,res,next){
-	let {email_id,password} = req.body;
+	let {username,password} = req.body;
 	let error = [];
-	if(!email_id){
-		error.push({code:500,message:"Email is required."})
+	if(!username){
+		error.push({code:500,message:"Username is required."})
 	}
 	else if(!password){
 		error.push({code:500,message:"Password is required."})
