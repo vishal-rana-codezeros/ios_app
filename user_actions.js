@@ -33,8 +33,8 @@ module.exports = {
  checkLogin : function(req,res){
  		async.waterfall([
  			function(callback){
- 				model.findOne({email_id:req.body.email_id,status:'ACTIVE'},(err,data)=>{
- 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Please check your email"}) : callback(null,data) 
+ 				model.findOne({username:req.body.username,status:'ACTIVE'},(err,data)=>{
+ 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Please check your username"}) : callback(null,data) 
  				})
  			},function(code,callback){
  				bcrypt.compare(req.body.password,code.password,(err,match)=>{
