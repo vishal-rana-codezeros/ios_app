@@ -10,7 +10,7 @@ module.exports = {
  	async.waterfall([
  		function(callback){
  			model.findOne({$or:[{email_id:req.body.email_id,status:'ACTIVE'},{username:req.body.username,status:'ACTIVE'}]},(err,data)=>{
- 				err ?  callback({code:500,message:"Internal server error"}) : data ? callback({code:400,message:"Email or username already exist."}) :	callback(null,data);
+ 				err ?  callback({code:500,message:"Internal server error"}) : data ? callback({code:400,message:"Email or Username already exists."}) :	callback(null,data);
  			})
  		},(data,callback)=>{
  				console.log('has no data');
@@ -25,7 +25,7 @@ module.exports = {
  			if(err){
  				return res.json(err);
  			}else{
- 				return res.json({code:201,message:"Registeration successful."})
+ 				return res.json({code:201,message:"Registration Successful."})
  			}
  		})
 
@@ -34,11 +34,11 @@ module.exports = {
  		async.waterfall([
  			function(callback){
  				model.findOne({username:req.body.username,status:'ACTIVE',type:'normal'},(err,data)=>{
- 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Username not found."}) : callback(null,data)
+ 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Username is not exist."}) : callback(null,data)
  				})
  			},function(code,callback){
  				bcrypt.compare(req.body.password,code.password,(err,match)=>{
- 				err ? callback({code:500,message:"Internal server error"})  : (!match) ? callback({code:400,message:"Please check your password"}) : callback(null,code);
+ 				err ? callback({code:500,message:"Internal server error"})  : (!match) ? callback({code:400,message:"Password is not correct."}) : callback(null,code);
  				})
  			},function(modify,callback){
  				validations.mapLogin(modify,(modified)=>callback(null,modified))
@@ -123,7 +123,7 @@ forgot_password: function(req,res){
   checkUser : (req,res)=>{
     let {username} = req.query;
     model.findOne({username:username,status:'ACTIVE'},(err,usernameExist)=>{
-      (err) ? res.json({code:500,message:"Internal server error"}) : (!usernameExist) ? res.json({status:true,message:"Username not found."}) :res.json({status:false,message:"Username already exist."})
+      (err) ? res.json({code:500,message:"Internal server error"}) : (!usernameExist) ? res.json({status:true,message:"Username not found."}) :res.json({status:false,message:"Username already exists."})
     })
 
   },
