@@ -24,8 +24,8 @@ function register(req,res,next){
 	if(error.length >0){
 		errors(error,res);
 	}else
-	next();		
-	
+	next();
+
 
 }
 
@@ -42,9 +42,22 @@ function checkLogin(req,res,next){
 	if(error.length >0){
 		errors(error,res);
 	}else
-	next();	
+	next();
 }
 
+function checkUser(req,res,next){
+	let {username} = req.query;
+	let error = [];
+	if(!username){
+		error.push({code:500,message:"Username is required."})
+	}
+
+	if(error.length >0){
+		errors(error,res);
+	}else
+	next();
+
+}
 
 
 
@@ -62,12 +75,11 @@ function errors(err,res){
 function convertPass(req,res,next){
 	console.log(req.body)
 	return validation.convertPass(req.body.password).then((data)=>{
-		console.log("data==>"+data)
 		 req.body.password = data
 		 next()
-		
+
 	});
-	
+
 }
 
 
@@ -80,7 +92,8 @@ module.exports = {
 
 	requiredCheck :register,
 	convertPass:convertPass,
-	checkLogin:checkLogin
+	checkLogin:checkLogin,
+	checkUser:checkUser
 
 
 }

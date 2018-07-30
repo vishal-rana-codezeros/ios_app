@@ -34,7 +34,7 @@ module.exports = {
  		async.waterfall([
  			function(callback){
  				model.findOne({username:req.body.username,status:'ACTIVE'},(err,data)=>{
- 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Please check your username"}) : callback(null,data) 
+ 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"User name not found."}) : callback(null,data)
  				})
  			},function(code,callback){
  				bcrypt.compare(req.body.password,code.password,(err,match)=>{
@@ -50,7 +50,7 @@ module.exports = {
  						}
 
  			})
- 					
+
 
  },
 forgot_password: function(req,res){
@@ -60,7 +60,7 @@ forgot_password: function(req,res){
 			function(cb){
 				if(req.body.email_id){
 					model.findOne({email_id:req.body.email_id,status:'ACTIVE'},(err,result)=>{
-						(err) ? cb({code:500,message:"Internal server error"}) : (!result) ? cb({code:400,message:"Please check your email"}) : cb(null,result)
+						(err) ? cb({code:500,message:"Internal server error"}) : (!result) ? cb({code:400,message:"Email not found."}) : cb(null,result)
 					})
 				}
 
@@ -73,7 +73,7 @@ forgot_password: function(req,res){
 				validations.convertPass(pass).then(new_pass=>cb(null,new_pass,pass))
 			},
 
-			function(pass,new_ps,cb){	
+			function(pass,new_ps,cb){
 				console.log('new pass==>'+pass)
 				model.findOneAndUpdate({email_id:req.body.email_id,status:'ACTIVE'},{$set:{password:pass}},{new:true},(err,new_pass)=>{
 					(err) ? cb({code:500,message:"Internal server error"}) : cb(null,new_ps)
@@ -90,9 +90,9 @@ forgot_password: function(req,res){
 				            user: 'vishal.rana@codezeros.com', // generated ethereal user
 				            pass: 'codezero#' // generated ethereal password
 				        }
-				        
+
 					})
-					
+
 			    let mailOptions = {
 			        from: '"Codezeros 👻" <harshad.goswami@webcluesglobal.com>', // sender address
 			        to: req.body.email_id, // list of receivers
@@ -119,8 +119,14 @@ forgot_password: function(req,res){
  							return res.json({code:200,message:"New password has been sent to your email account."})
  						}
 			})
-	}
+	},
+
+  checkUser : (req,res)=>{
+    let {username} = req.query;
+    model.findOne({username:username,status:'ACTIVE'},(err,usernameExist)=>{
+      (err) ? res.json({code:500,message:"Internal server error"}) : (!usernameExist) ? res.json({status:true,message:"Username not found."}) :res.json({status:false,message:"Username already exist."})
+    })
+
+  }
 
  }
-
-

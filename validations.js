@@ -42,7 +42,6 @@ function mapLogin(data,cb){
 }
 
 
-
 module.exports = {
 	validateEmail:validateEmail,
 	convertPass:convertPass,

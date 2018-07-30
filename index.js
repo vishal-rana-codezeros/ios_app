@@ -25,7 +25,7 @@ app.post('/login',[middleWare.checkLogin],(req,res)=>userAction.checkLogin(req,r
 
 app.post('/forgot_password',(req,res)=>userAction.forgot_password(req,res))
 
-
+app.get('/checkUser',[middleWare.checkUser],(req,res)=>userAction.checkUser(req,res))
 
 
 app.listen(app.get('port'),()=>{
