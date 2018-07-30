@@ -33,7 +33,7 @@ module.exports = {
  checkLogin : function(req,res){
  		async.waterfall([
  			function(callback){
- 				model.findOne({username:req.body.username,status:'ACTIVE'},(err,data)=>{
+ 				model.findOne({username:req.body.username,status:'ACTIVE',type:'normal'},(err,data)=>{
  					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"User name not found."}) : callback(null,data)
  				})
  			},function(code,callback){
@@ -90,7 +90,6 @@ forgot_password: function(req,res){
 				            user: 'vishal.rana@codezeros.com', // generated ethereal user
 				            pass: 'codezero#' // generated ethereal password
 				        }
-
 					})
 
 			    let mailOptions = {
@@ -125,6 +124,25 @@ forgot_password: function(req,res){
     let {username} = req.query;
     model.findOne({username:username,status:'ACTIVE'},(err,usernameExist)=>{
       (err) ? res.json({code:500,message:"Internal server error"}) : (!usernameExist) ? res.json({status:true,message:"Username not found."}) :res.json({status:false,message:"Username already exist."})
+    })
+
+  },
+  loginFb:(req,res)=>{
+    let {fb_id} = req.body;
+    async.waterfall([
+      function(cb){
+        model.findOne({fb_id:fb_id,status:'ACTIVE'},(err,fb_exist)=>{
+          (err) ? cb({code:500,message:"Internal server error"}) : (!fb_exist) ? cb(null,req.body) : cb({code:200,message:"Success.",data:fb_exist})
+        })
+      },(data,cb)=>{
+        console.log(data);
+        var Model  = new model(data);
+        Model.save((err,new_entry)=>{
+          (err) ? cb({code:500,message:"Internal server error"}) : cb(null,{code:200,message:'Success',data:new_entry})
+        })
+      }
+    ],(err,result)=>{
+      (err) ? res.json(err) : res.json(result)
     })
 
   }

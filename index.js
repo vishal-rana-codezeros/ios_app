@@ -27,6 +27,7 @@ app.post('/forgot_password',(req,res)=>userAction.forgot_password(req,res))
 
 app.get('/checkUser',[middleWare.checkUser],(req,res)=>userAction.checkUser(req,res))
 
+app.post('/loginFacebook',[middleWare.checkFbLogin],(req,res)=>userAction.loginFb(req,res));
 
 app.listen(app.get('port'),()=>{
 console.log(`Server listening on ${app.get('port')}`);

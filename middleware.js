@@ -3,7 +3,7 @@ const validation = require('./validations')
 
 function register(req,res,next){
 
-	let {fullname,username,email_id,password} = req.body;
+	let {fullname,username,email_id,password,fb_id,type} = req.body;
 	let error = [];
 	if(!fullname){
 		error.push({code:500,message:"Full name is required."})
@@ -18,6 +18,12 @@ function register(req,res,next){
 	}
 	else if(!validation.validateEmail(email_id)){
 		error.push({code:500,message:"Please provide valid email."})
+	}
+	else if(fb_id){
+			error.push({code:500,message:"Fb id is not required."})
+	}
+	else if(type && type == 'facebook'){
+	error.push({code:500,message:"Type needs to be normal."})
 	}
 
 
@@ -56,15 +62,30 @@ function checkUser(req,res,next){
 		errors(error,res);
 	}else
 	next();
+}
+
+
+function checkFbLogin(req,res,next){
+	let {fb_id,type} = req.body;
+	let error = [];
+
+ if(!fb_id){
+		error.push({code:500,message:"Facebook id is required."})
+	}
+	else if(!type || type != 'facebook') {
+		error.push({code:500,message:"Provide a type."})
+	}
+
+
+	if(error.length >0){
+		errors(error,res);
+	}else
+	next();
 
 }
 
 
-
-
-
 function errors(err,res){
-	console.log("err"+err)
 	if(err){
 		return res.json(err[0])
 	}
@@ -73,11 +94,9 @@ function errors(err,res){
 
 
 function convertPass(req,res,next){
-	console.log(req.body)
 	return validation.convertPass(req.body.password).then((data)=>{
 		 req.body.password = data
-		 next()
-
+		 next();
 	});
 
 }
@@ -93,7 +112,8 @@ module.exports = {
 	requiredCheck :register,
 	convertPass:convertPass,
 	checkLogin:checkLogin,
-	checkUser:checkUser
+	checkUser:checkUser,
+	checkFbLogin:checkFbLogin
 
 
 }
