@@ -34,7 +34,7 @@ module.exports = {
  		async.waterfall([
  			function(callback){
  				model.findOne({username:req.body.username,status:'ACTIVE',type:'normal'},(err,data)=>{
- 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"User name not found."}) : callback(null,data)
+ 					err ? callback({code:500,message:"Internal server error"}) : (!data) ? callback({code:400,message:"Username not found."}) : callback(null,data)
  				})
  			},function(code,callback){
  				bcrypt.compare(req.body.password,code.password,(err,match)=>{
